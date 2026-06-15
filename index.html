@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduCenter — Boshqaruv Tizimi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+:root{--navy:#1B2B4B;--sky:#3B82F6;--mint:#10B981;--amber:#F59E0B;--rose:#EF4444;--cream:#F8FAFF;--slate:#64748B;--border:#E2E8F0;--white:#FFFFFF;--shadow:0 4px 24px rgba(27,43,75,0.10);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;}
+#login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1B2B4B 0%,#2563EB 100%);}
+.login-card{background:#fff;border-radius:24px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
+.login-logo{text-align:center;margin-bottom:32px;}
+.login-logo .icon{width:64px;height:64px;background:linear-gradient(135deg,#3B82F6,#1B2B4B);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px;}
+.login-logo h1{font-family:'Playfair Display',serif;font-size:26px;color:var(--navy);}
+.login-logo p{color:var(--slate);font-size:14px;margin-top:4px;}
+.role-tabs{display:flex;background:var(--cream);border-radius:12px;padding:4px;margin-bottom:24px;}
+.role-tab{flex:1;padding:8px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:var(--slate);transition:all 0.2s;}
+.role-tab.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,0.10);}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;}
+.form-group input,.form-group select{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;background:#fff;}
+.form-group input:focus,.form-group select:focus{border-color:var(--sky);}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#3B82F6,#1B2B4B);color:white;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity 0.2s;font-family:'Inter',sans-serif;}
+.btn-primary:hover{opacity:0.92;}
+.login-hint{margin-top:20px;background:#EFF6FF;border-radius:10px;padding:14px;font-size:12px;color:var(--slate);line-height:1.8;}
+.login-hint strong{color:var(--navy);}
+#app{display:none;min-height:100vh;}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:var(--navy);z-index:100;display:flex;flex-direction:column;}
+.sidebar-logo{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.sidebar-logo h2{font-family:'Playfair Display',serif;color:white;font-size:20px;}
+.sidebar-logo p{color:rgba(255,255,255,0.5);font-size:12px;margin-top:2px;}
+.user-badge{margin:16px;background:rgba(255,255,255,0.07);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;}
+.user-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.user-info .name{color:white;font-size:13px;font-weight:600;}
+.user-info .role{color:rgba(255,255,255,0.5);font-size:11px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;margin:2px 8px;border-radius:10px;cursor:pointer;color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;transition:all 0.2s;border:none;background:transparent;width:calc(100% - 16px);text-align:left;font-family:'Inter',sans-serif;}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:white;}
+.nav-item.active{background:rgba(59,130,246,0.25);color:#60A5FA;}
+.sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid rgba(255,255,255,0.08);}
+.btn-logout{width:100%;padding:10px;background:rgba(239,68,68,0.15);color:#FCA5A5;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;}
+.main-content{margin-left:240px;padding:32px;min-height:100vh;}
+.page{display:none;}
+.page.active{display:block;}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.page-title{font-size:24px;font-weight:700;color:var(--navy);}
+.page-sub{font-size:14px;color:var(--slate);margin-top:2px;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px;}
+.stat-card{background:#fff;border-radius:16px;padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;}
+.stat-value{font-size:28px;font-weight:700;color:var(--navy);}
+.stat-label{font-size:13px;color:var(--slate);margin-top:2px;}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:24px;}
+.card-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{text-align:left;padding:10px 14px;font-size:12px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--border);background:var(--cream);}
+.data-table td{padding:12px 14px;font-size:14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:var(--cream);}
+.badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;}
+.badge-green{background:#D1FAE5;color:#065F46;}
+.badge-red{background:#FEE2E2;color:#991B1B;}
+.badge-amber{background:#FEF3C7;color:#92400E;}
+.badge-blue{background:#DBEAFE;color:#1E40AF;}
+.btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;}
+.btn-blue{background:#DBEAFE;color:#1E40AF;}
+.btn-green{background:#D1FAE5;color:#065F46;}
+.btn-red{background:#FEE2E2;color:#991B1B;}
+.btn-add{padding:10px 20px;background:var(--sky);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;}
+.search-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.search-bar input{padding:10px 16px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;flex:1;}
+.filter-select{padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;background:white;cursor:pointer;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:20px;padding:32px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.modal-actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;}
+.btn-cancel{padding:10px 20px;background:var(--border);color:var(--slate);border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+.group-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.group-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s;}
+.group-card:hover{border-color:var(--sky);}
+.group-card .g-name{font-weight:700;font-size:15px;color:var(--navy);}
+.group-card .g-teacher{font-size:12px;color:var(--slate);margin-top:4px;}
+.group-card .g-count{margin-top:10px;font-size:13px;font-weight:600;color:var(--sky);}
+.payment-bar{height:8px;background:var(--border);border-radius:4px;margin-top:8px;overflow:hidden;}
+.payment-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--mint),#34D399);}
+.empty-state{text-align:center;padding:40px;color:var(--slate);font-size:14px;}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;}
+.info-row:last-child{border-bottom:none;}
+.info-row .label{color:var(--slate);}
+.info-row .value{font-weight:600;}
+.notif{position:fixed;bottom:24px;right:24px;background:var(--navy);color:white;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;box-shadow:var(--shadow);transform:translateY(100px);opacity:0;transition:all 0.3s;}
+.notif.show{transform:translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+<div id="login-page">
+<div class="login-card">
+<div class="login-logo">
+<div class="icon">🎓</div>
+<h1>EduCenter</h1>
+<p>Ta'lim markazi boshqaruv tizimi</p>
+</div>
+<div class="role-tabs">
+<button class="role-tab active" onclick="setRole('admin')">👨‍💼 Admin</button>
+<button class="role-tab" onclick="setRole('teacher')">👨‍🏫 O'qituvchi</button>
+<button class="role-tab" onclick="setRole('parent')">👨‍👩‍👧 Ota-ona</button>
+</div>
+<div class="form-group"><label>Login</label><input type="text" id="login-user" placeholder="loginni kiriting"/></div>
+<div class="form-group"><label>Parol</label><input type="password" id="login-pass" placeholder="parolni kiriting"/></div>
+<button class="btn-primary" onclick="doLogin()">Kirish →</button>
+<div class="login-hint">
+<strong>Admin:</strong> admin / admin123<br>
+<strong>O'qituvchi 1:</strong> teacher1 / teach1<br>
+<strong>O'qituvchi 2:</strong> teacher2 / teach2<br>
+<strong>O'qituvchi 3:</strong> teacher3 / teach3<br>
+<strong>O'qituvchi 4:</strong> teacher4 / teach4<br>
+<strong>Ota-ona:</strong> parent1 / parent1
+</div>
+</div>
+</div>
+<div id="app">
+<div class="sidebar">
+<div class="sidebar-logo"><h2>🎓 EduCenter</h2><p>Boshqaruv tizimi</p></div>
+<div class="user-badge"><div class="user-avatar" id="sidebar-avatar"></div><div class="user-info"><div class="name" id="sidebar-name"></div><div class="role" id="sidebar-role"></div></div></div>
+<div id="nav-menu"></div>
+<div class="sidebar-bottom"><button class="btn-logout" onclick="doLogout()">⬅ Chiqish</button></div>
+</div>
+<div class="main-content">
+<div class="page active" id="page-dashboard">
+<div class="page-header"><div><div class="page-title">📊 Bosh sahifa</div><div class="page-sub">Umumiy ko'rsatkichlar</div></div></div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-icon" style="background:#EFF6FF">👶</div><div class="stat-value" id="stat-students">0</div><div class="stat-label">Jami o'quvchilar</div></div>
+<div class="stat-card"><div class="stat-icon" style="background:#F0FDF4">👨‍🏫</div><div class="stat-value">4</div><div class="stat-label">O'qituvchilar</div></div>
+<div class="stat-card"><div class="stat-icon" style="background:#FEF3C7">🏫</div><div class="stat-value">10</div><div class="stat-label">Guruhlar</div></div>
+<div class="stat-card"><div class="stat-icon" style="background:#FFF7ED">💰</div><div class="stat-value" id="stat-payment">0%</div><div class="stat-label">To'lov holati</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div class="card"><div class="card-title">📚 Guruhlar ro'yxati</div><div id="dashboard-groups"></div></div>
+<div class="card"><div class="card-title">💳 To'lov holati</div><div id="dashboard-payments"></div></div>
+</div>
+</div>
+<div class="page" id="page-students">
+<div class="page-header"><div><div class="page-title">👶 O'quvchilar</div><div class="page-sub">Barcha o'quvchilar</div></div><button class="btn-add admin-only" onclick="openAddStudent()">+ Yangi o'quvchi</button></div>
+<div class="search-bar"><input type="text" id="student-search" placeholder="🔍 Qidirish..." oninput="renderStudents()"/><select class="filter-select" id="student-group-filter" onchange="renderStudents()"><option value="">Barcha guruhlar</option></select><select class="filter-select" id="student-payment-filter" onchange="renderStudents()"><option value="">Barcha to'lovlar</option><option value="paid">To'langan ✅</option><option value="pending">Kutilmoqda ⏳</option><option value="overdue">Muddati o'tgan ❌</option></select></div>
+<div class="card" style="padding:0"><table class="data-table"><thead><tr><th>O'quvchi</th><th>Guruh</th><th>Telefon</th><th>To'lov</th><th>Holati</th><th>Davomat</th><th class="admin-only">Amallar</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+</div>
+<div class="page" id="page-groups"><div class="page-header"><div><div class="page-title">🏫 Guruhlar</div><div class="page-sub">10 ta guruh</div></div></div><div class="group-grid" id="groups-grid"></div></div>
+<div class="page" id="page-attendance"><div class="page-header"><div><div class="page-title">📋 Davomat</div><div class="page-sub">Kunlik davomat</div></div></div><div class="card"><div class="card-title">Guruh tanlang</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px" id="att-group-tabs"></div><div id="att-content"></div></div></div>
+<div class="page" id="page-payments"><div class="page-header"><div><div class="page-title">💰 To'lovlar</div><div class="page-sub">Oylik to'lovlar</div></div></div><div class="card" style="padding:0"><table class="data-table"><thead><tr><th>O'quvchi</th><th>Guruh</th><th>Oylik</th><th>Holati</th><th class="admin-only">Amallar</th></tr></thead><tbody id="payments-table-body"></tbody></table></div></div>
+<div class="page" id="page-parents"><div class="page-header"><div><div class="page-title">👨‍👩‍👧 Ota-onalar</div><div class="page-sub">Ro'yxat</div></div><button class="btn-add" onclick="openAddParent()">+ Yangi qo'shish</button></div><div class="card" style="padding:0"><table class="data-table"><thead><tr><th>Ota-ona</th><th>Telefon</th><th>Bola</th><th>Guruh</th><th>To'lov</th><th class="admin-only">Amallar</th></tr></thead><tbody id="parents-table-body"></tbody></table></div></div>
+<div class="page" id="page-mychild"><div class="page-header"><div><div class="page-title">👶 Mening bolam</div></div></div><div id="mychild-content"></div></div>
+</div>
+</div>
+<div class="modal-overlay" id="modal-student"><div class="modal"><div class="modal-title">➕ Yangi o'quvchi</div><div class="form-row"><div class="form-group"><label>Ismi</label><input type="text" id="s-name" placeholder="Ism"/></div><div class="form-group"><label>Familiyasi</label><input type="text" id="s-surname" placeholder="Familiya"/></div></div><div class="form-group"><label>Guruh</label><select id="s-group"></select></div><div class="form-group"><label>Telefon</label><input type="text" id="s-phone" placeholder="+998 90 000 0000"/></div><div class="form-group"><label>Oylik to'lov</label><input type="number" id="s-fee" value="500000"/></div><div class="form-group"><label>Ota-ona ismi</label><input type="text" id="s-parent" placeholder="Ota yoki ona"/></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('modal-student')">Bekor</button><button class="btn-primary" style="width:auto;padding:10px 24px" onclick="saveStudent()">Saqlash ✓</button></div></div></div>
+<div class="modal-overlay" id="modal-parent"><div class="modal"><div class="modal-title">👨‍👩‍👧 Yangi ota-ona</div><div class="form-group"><label>Ota-ona ismi</label><input type="text" id="p-name" placeholder="Ism"/></div><div class="form-group"><label>Telefon</label><input type="text" id="p-phone" placeholder="+998 90 000 0000"/></div><div class="form-row"><div class="form-group"><label>Bola ismi</label><input type="text" id="p-child-name" placeholder="Ism"/></div><div class="form-group"><label>Familiya</label><input type="text" id="p-child-surname" placeholder="Familiya"/></div></div><div class="form-group"><label>Guruh</label><select id="p-group"></select></div><div class="form-group"><label>Oylik to'lov</label><input type="number" id="p-fee" value="500000"/></div><div class="modal-actions"><button class="btn-cancel" onclick="closeModal('modal-parent')">Bekor</button><button class="btn-primary" style="width:auto;padding:10px 24px" onclick="saveParent()">Qo'shish ✓</button></div></div></div>
+<div class="notif" id="notif"></div>
+<script>
+const USERS={admin:{pass:'admin123',role:'admin',name:'Administrator',avatar:'👨‍💼'},teacher1:{pass:'teach1',role:'teacher',name:'Aziz Karimov',avatar:'👨‍🏫',group:'Guruh A'},teacher2:{pass:'teach2',role:'teacher',name:'Malika Yusupova',avatar:'👩‍🏫',group:'Guruh B'},teacher3:{pass:'teach3',role:'teacher',name:'Jasur Toshmatov',avatar:'👨‍🏫',group:'Guruh C'},teacher4:{pass:'teach4',role:'teacher',name:'Nodira Rahimova',avatar:'👩‍🏫',group:'Guruh D'},parent1:{pass:'parent1',role:'parent',name:'Sardor Nazarov',avatar:'👨‍👩‍👧',childId:1}};
+const GROUPS=[{id:1,name:'Guruh A',teacher:'Aziz Karimov',time:'09:00-11:00',days:'Du-Ch-Ju'},{id:2,name:'Guruh B',teacher:'Malika Yusupova',time:'11:00-13:00',days:'Se-Pa-Sha'},{id:3,name:'Guruh C',teacher:'Jasur Toshmatov',time:'14:00-16:00',days:'Du-Ch-Ju'},{id:4,name:'Guruh D',teacher:'Nodira Rahimova',time:'16:00-18:00',days:'Se-Pa-Sha'},{id:5,name:'Guruh E',teacher:'Aziz Karimov',time:'08:00-10:00',days:'Du-Ch-Ju'},{id:6,name:'Guruh F',teacher:'Malika Yusupova',time:'10:00-12:00',days:'Se-Pa-Sha'},{id:7,name:'Guruh G',teacher:'Jasur Toshmatov',time:'13:00-15:00',days:'Du-Ch-Ju'},{id:8,name:'Guruh H',teacher:'Nodira Rahimova',time:'15:00-17:00',days:'Se-Pa-Sha'},{id:9,name:'Guruh I',teacher:'Aziz Karimov',time:'17:00-19:00',days:'Du-Ch-Ju'},{id:10,name:'Guruh J',teacher:'Malika Yusupova',time:'19:00-21:00',days:'Se-Pa-Sha'}];
+let STUDENTS=[{id:1,name:'Ali',surname:'Karimov',group:'Guruh A',phone:'+998901234567',fee:500000,payment:'paid',parent:'Sardor Karimov',attendance:[1,1,0,1,1,1,0,1,1,1,1,0,1,1,1,1,1,0,1,1]},{id:2,name:'Zulfiya',surname:'Rahimova',group:'Guruh A',phone:'+998907654321',fee:500000,payment:'paid',parent:'Maftuna Rahimova',attendance:[1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1]},{id:3,name:'Bobur',surname:'Toshmatov',group:'Guruh B',phone:'+998901111111',fee:600000,payment:'pending',parent:'Ulmas Toshmatov',attendance:[1,0,1,1,0,1,1,1,0,1,1,1,1,0,1,1,1,1,1,0]},{id:4,name:'Nilufar',surname:'Yusupova',group:'Guruh B',phone:'+998902222222',fee:600000,payment:'overdue',parent:'Gulnora Yusupova',attendance:[0,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,1,1,1,1]},{id:5,name:'Jasur',surname:'Mirzaev',group:'Guruh C',phone:'+998903333333',fee:550000,payment:'paid',parent:'Hamid Mirzaev',attendance:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{id:6,name:'Dilnoza',surname:'Nazarova',group:'Guruh C',phone:'+998904444444',fee:550000,payment:'pending',parent:'Farida Nazarova',attendance:[1,1,0,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1]},{id:7,name:'Sherzod',surname:'Holmatov',group:'Guruh D',phone:'+998905555555',fee:480000,payment:'paid',parent:'Davron Holmatov',attendance:[1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1]},{id:8,name:'Mohira',surname:'Qodirov',group:'Guruh D',phone:'+998906666666',fee:480000,payment:'overdue',parent:'Sabohat Qodirov',attendance:[0,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1]},{id:9,name:'Azizbek',surname:'Ergashev',group:'Guruh E',phone:'+998907777777',fee:520000,payment:'paid',parent:'Mansur Ergashev',attendance:[1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]},{id:10,name:'Sabohat',surname:'Tillayev',group:'Guruh F',phone:'+998908888888',fee:520000,payment:'pending',parent:'Rustam Tillayev',attendance:[1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1]},{id:11,name:'Kamola',surname:'Umarov',group:'Guruh G',phone:'+998901010101',fee:450000,payment:'paid',parent:'Barno Umarov',attendance:[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{id:12,name:'Mansur',surname:'Sodiqov',group:'Guruh H',phone:'+998902020202',fee:450000,payment:'paid',parent:'Nargiz Sodiqov',attendance:[1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1]}];
+let currentUser=null,currentRole='admin',selectedAttGroup=0;
+function setRole(r){currentRole=r;document.querySelectorAll('.role-tab').forEach((t,i)=>t.classList.toggle('active',['admin','teacher','parent'][i]===r));}
+function doLogin(){const u=document.getElementById('login-user').value.trim(),p=document.getElementById('login-pass').value.trim(),m=USERS[u];if(m&&m.pass===p&&m.role===currentRole){currentUser={...m,username:u};initApp();}else showNotif('❌ Login yoki parol noto\'g\'ri!');}
+function doLogout(){currentUser=null;document.getElementById('login-page').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('login-user').value='';document.getElementById('login-pass').value='';}
+function initApp(){document.getElementById('login-page').style.display='none';document.getElementById('app').style.display='block';document.getElementById('sidebar-name').textContent=currentUser.name;document.getElementById('sidebar-avatar').textContent=currentUser.avatar;document.getElementById('sidebar-role').textContent={admin:'👑 Administrator',teacher:'📚 O\'qituvchi',parent:'👨‍👩‍👧 Ota-ona'}[currentUser.role];document.querySelectorAll('.admin-only').forEach(el=>el.style.display=currentUser.role==='admin'?'':'none');buildNav();populateFilters();showPage(currentUser.role==='parent'?'mychild':'dashboard');updateStats();}
+function buildNav(){const menus={admin:[{icon:'📊',label:'Bosh sahifa',page:'dashboard'},{icon:'👶',label:'O\'quvchilar',page:'students'},{icon:'🏫',label:'Guruhlar',page:'groups'},{icon:'📋',label:'Davomat',page:'attendance'},{icon:'💰',label:'To\'lovlar',page:'payments'},{icon:'👨‍👩‍👧',label:'Ota-onalar',page:'parents'}],teacher:[{icon:'📊',label:'Bosh sahifa',page:'dashboard'},{icon:'👶',label:'O\'quvchilar',page:'students'},{icon:'📋',label:'Davomat',page:'attendance'}],parent:[{icon:'👶',label:'Mening bolam',page:'mychild'},{icon:'📋',label:'Davomat',page:'attendance'},{icon:'💰',label:'To\'lovlar',page:'payments'}]};const nav=document.getElementById('nav-menu');nav.innerHTML='';menus[currentUser.role].forEach(item=>{nav.innerHTML+=`<button class="nav-item" onclick="showPage('${item.page}')" id="nav-${item.page}"><span>${item.icon}</span> ${item.label}</button>`;});}
+function showPage(page){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const el=document.getElementById('page-'+page);if(el)el.classList.add('active');const nav=document.getElementById('nav-'+page);if(nav)nav.classList.add('active');if(page==='students')renderStudents();if(page==='groups')renderGroups();if(page==='attendance')renderAttendance();if(page==='payments')renderPayments();if(page==='parents')renderParents();if(page==='mychild')renderMyChild();if(page==='dashboard')renderDashboard();}
+function updateStats(){document.getElementById('stat-students').textContent=STUDENTS.length;const paid=STUDENTS.filter(s=>s.payment==='paid').length;document.getElementById('stat-payment').textContent=Math.round(paid/STUDENTS.length*100)+'%';}
+function populateFilters(){const gf=document.getElementById('student-group-filter'),sg=document.getElementById('s-group'),pg=document.getElementById('p-group');[gf,sg,pg].forEach(sel=>{if(!sel)return;const isF=sel.id==='student-group-filter';sel.innerHTML=isF?'<option value="">Barcha guruhlar</option>':'';GROUPS.forEach(g=>{sel.innerHTML+=`<option value="${g.name}">${g.name} — ${g.teacher}</option>`;});});}
+function renderDashboard(){updateStats();let html='';GROUPS.forEach(g=>{const c=STUDENTS.filter(s=>s.group===g.name).length;html+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><div><div style="font-weight:600;font-size:14px">${g.name}</div><div style="font-size:12px;color:var(--slate)">${g.teacher} · ${c} o'quvchi</div></div><span class="badge badge-blue">${c} ta</span></div>`;});document.getElementById('dashboard-groups').innerHTML=html;let ph='';const r=STUDENTS.filter(s=>s.payment!=='paid').slice(0,6);r.forEach(s=>{ph+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><div><div style="font-weight:600;font-size:14px">${s.name} ${s.surname}</div><div style="font-size:12px;color:var(--slate)">${s.group}</div></div><span class="badge ${s.payment==='pending'?'badge-amber':'badge-red'}">${s.payment==='pending'?'⏳':'❌'}</span></div>`;});document.getElementById('dashboard-payments').innerHTML=ph||'<div class="empty-state">✅ Barcha to\'lovlar amalga oshirilgan!</div>';}
+function renderStudents(){const search=(document.getElementById('student-search')?.value||'').toLowerCase(),gf=document.getElementById('student-group-filter')?.value||'',pf=document.getElementById('student-payment-filter')?.value||'';let list=STUDENTS.filter(s=>{const full=(s.name+' '+s.surname).toLowerCase();if(search&&!full.includes(search))return false;if(gf&&s.group!==gf)return false;if(pf&&s.payment!==pf)return false;if(currentUser.role==='teacher'&&s.group!==currentUser.group)return false;return true;});const body=document.getElementById('students-table-body');if(!list.length){body.innerHTML='<tr><td colspan="7"><div class="empty-state">🔍 O\'quvchi topilmadi</div></td></tr>';return;}body.innerHTML=list.map(s=>{const pr=s.attendance.filter(a=>a).length,tot=s.attendance.length,pct=Math.round(pr/tot*100),pB=s.payment==='paid'?'badge-green':s.payment==='pending'?'badge-amber':'badge-red',pT=s.payment==='paid'?'✅ To\'langan':s.payment==='pending'?'⏳ Kutilmoqda':'❌ Muddati o\'tgan',aa=currentUser.role==='admin'?`<td><div style="display:flex;gap:6px"><button class="btn-sm btn-green" onclick="togglePayment(${s.id})">💰</button><button class="btn-sm btn-red" onclick="deleteStudent(${s.id})">🗑</button></div></td>`:'';return`<tr><td><div style="font-weight:600">${s.name} ${s.surname}</div><div style="font-size:12px;color:var(--slate)">${s.parent}</div></td><td><span class="badge badge-blue">${s.group}</span></td><td>${s.phone}</td><td style="font-weight:700">${s.fee.toLocaleString()} so'm</td><td><span class="badge ${pB}">${pT}</span></td><td><div style="display:flex;align-items:center;gap:8px"><div style="font-size:13px;font-weight:600;width:36px">${pct}%</div><div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${pct>80?'#10B981':pct>60?'#F59E0B':'#EF4444'};border-radius:3px"></div></div></div></td>${aa}</tr>`;}).join('');}
+function renderGroups(){document.getElementById('groups-grid').innerHTML=GROUPS.map(g=>{const st=STUDENTS.filter(s=>s.group===g.name),paid=st.filter(s=>s.payment==='paid').length,pct=st.length>0?Math.round(paid/st.length*100):0;return`<div class="group-card"><div class="g-name">🏫 ${g.name}</div><div class="g-teacher">👨‍🏫 ${g.teacher}</div><div style="font-size:12px;color:var(--slate);margin-top:4px">⏰ ${g.time} · 📅 ${g.days}</div><div class="g-count">${st.length} o'quvchi</div><div style="font-size:12px;color:var(--slate);margin-top:6px">To'lov: ${pct}%</div><div class="payment-bar"><div class="payment-fill" style="width:${pct}%"></div></div></div>`;}).join('');}
+function renderAttendance(){const tabs=document.getElementById('att-group-tabs'),content=document.getElementById('att-content');const vg=currentUser.role==='teacher'?GROUPS.filter(g=>g.name===currentUser.group):currentUser.role==='parent'?GROUPS.filter(g=>{const c=STUDENTS.find(s=>s.id===currentUser.childId);return c&&g.name===c.group;}):GROUPS;if(selectedAttGroup===0&&vg.length>0)selectedAttGroup=vg[0].id;tabs.innerHTML=vg.map(g=>`<button class="btn-sm ${selectedAttGroup===g.id?'btn-blue':''}" style="padding:8px 16px" onclick="selectedAttGroup=${g.id};renderAttendance()">${g.name}</button>`).join('');const group=vg.find(g=>g.id===selectedAttGroup);if(!group){content.innerHTML='';return;}const students=STUDENTS.filter(s=>s.group===group.name);content.innerHTML=`<table class="data-table"><thead><tr><th>O'quvchi</th>${Array.from({length:20},(_,i)=>`<th style="text-align:center;padding:8px">${i+1}</th>`).join('')}<th>Jami</th></tr></thead><tbody>${students.map(s=>{const pr=s.attendance.filter(a=>a).length;return`<tr><td><strong>${s.name} ${s.surname}</strong></td>${s.attendance.map((a,i)=>{const can=currentUser.role==='admin'||currentUser.role==='teacher';return`<td style="text-align:center;padding:6px"><div onclick="${can?`toggleAtt(${s.id},${i})`:''}" style="width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:${a?'#D1FAE5':'#FEE2E2'};cursor:${can?'pointer':'default'};font-size:13px">${a?'✓':'✗'}</div></td>`;}).join('')}<td style="text-align:center"><strong>${pr}/20</strong></td></tr>`;}).join('')}</tbody></table>`;}
+function toggleAtt(sid,di){const s=STUDENTS.find(s=>s.id===sid);if(s){s.attendance[di]=s.attendance[di]?0:1;renderAttendance();showNotif('📋 Davomat yangilandi!');}}
+function renderPayments(){const list=currentUser.role==='parent'?STUDENTS.filter(s=>s.id===currentUser.childId):currentUser.role==='teacher'?STUDENTS.filter(s=>s.group===currentUser.group):STUDENTS;document.getElementById('payments-table-body').innerHTML=list.map(s=>{const pB=s.payment==='paid'?'badge-green':s.payment==='pending'?'badge-amber':'badge-red',pT=s.payment==='paid'?'✅ To\'langan':s.payment==='pending'?'⏳ Kutilmoqda':'❌ Muddati o\'tgan',aa=currentUser.role==='admin'?`<td><button class="btn-sm ${s.payment==='paid'?'btn-red':'btn-green'}" onclick="togglePayment(${s.id})">${s.payment==='paid'?'↩ Bekor':'✓ To\'landi'}</button></td>`:'';return`<tr><td><strong>${s.name} ${s.surname}</strong></td><td><span class="badge badge-blue">${s.group}</span></td><td style="font-weight:700">${s.fee.toLocaleString()} so'm</td><td><span class="badge ${pB}">${pT}</span></td>${aa}</tr>`;}).join('');}
+function renderParents(){document.getElementById('parents-table-body').innerHTML=STUDENTS.map(s=>{const pB=s.payment==='paid'?'badge-green':s.payment==='pending'?'badge-amber':'badge-red',pT=s.payment==='paid'?'✅':'⏳',aa=currentUser.role==='admin'?`<td><button class="btn-sm btn-red" onclick="deleteStudent(${s.id})">🗑</button></td>`:'';return`<tr><td><strong>${s.parent}</strong></td><td>${s.phone}</td><td>${s.name} ${s.surname}</td><td><span class="badge badge-blue">${s.group}</span></td><td><span class="badge ${pB}">${pT} ${s.fee.toLocaleString()} so'm</span></td>${aa}</tr>`;}).join('');}
+function renderMyChild(){const child=STUDENTS.find(s=>s.id===currentUser.childId);if(!child){document.getElementById('mychild-content').innerHTML='<div class="empty-state">🔍 Ma\'lumot topilmadi</div>';return;}const group=GROUPS.find(g=>g.name===child.group),pr=child.attendance.filter(a=>a).length,pct=Math.round(pr/child.attendance.length*100),pB=child.payment==='paid'?'badge-green':child.payment==='pending'?'badge-amber':'badge-red',pT=child.payment==='paid'?'✅ To\'langan':child.payment==='pending'?'⏳ Kutilmoqda':'❌ Muddati o\'tgan';document.getElementById('mychild-content').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px"><div class="card"><div class="card-title">👶 Bola ma'lumotlari</div><div class="info-row"><span class="label">Ismi</span><span class="value">${child.name} ${child.surname}</span></div><div class="info-row"><span class="label">Guruh</span><span class="value">${child.group}</span></div><div class="info-row"><span class="label">O'qituvchi</span><span class="value">${group?.teacher||''}</span></div><div class="info-row"><span class="label">Vaqt</span><span class="value">${group?.time||''}</span></div></div><div class="card"><div class="card-title">💰 To'lov holati</div><div class="info-row"><span class="label">Oylik</span><span class="value">${child.fee.toLocaleString()} so'm</span></div><div class="info-row"><span class="label">Holati</span><span class="value"><span class="badge ${pB}">${pT}</span></span></div><div class="info-row"><span class="label">Davomat</span><span class="value">${pr}/20 (${pct}%)</span></div></div></div><div class="card"><div class="card-title">📋 Davomat</div><div style="display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:4px">${child.attendance.map((a,i)=>`<div style="text-align:center"><div style="font-size:11px;color:var(--slate);margin-bottom:4px">${i+1}</div><div style="width:32px;height:32px;border-radius:50%;margin:auto;display:flex;align-items:center;justify-content:center;background:${a?'#D1FAE5':'#FEE2E2'};font-size:13px">${a?'✓':'✗'}</div></div>`).join('')}</div></div>`;}
+function togglePayment(id){const s=STUDENTS.find(s=>s.id===id);if(s){s.payment=s.payment==='paid'?'pending':'paid';renderStudents();renderPayments();updateStats();renderDashboard();showNotif('💰 To\'lov holati yangilandi!');}}
+function deleteStudent(id){if(confirm('O\'quvchini o\'chirishni tasdiqlaysizmi?')){STUDENTS=STUDENTS.filter(s=>s.id!==id);renderStudents();renderParents();updateStats();renderDashboard();showNotif('🗑 O\'quvchi o\'chirildi!');}}
+function openAddStudent(){populateFilters();document.getElementById('modal-student').classList.add('open');}
+function openAddParent(){populateFilters();document.getElementById('modal-parent').classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function saveStudent(){const name=document.getElementById('s-name').value.trim(),surname=document.getElementById('s-surname').value.trim(),group=document.getElementById('s-group').value,phone=document.getElementById('s-phone').value.trim(),fee=parseInt(document.getElementById('s-fee').value)||500000,parent=document.getElementById('s-parent').value.trim();if(!name||!surname||!group){showNotif('⚠️ Ism, familiya va guruhni kiriting!');return;}const newId=Math.max(...STUDENTS.map(s=>s.id))+1;STUDENTS.push({id:newId,name,surname,group,phone,fee,payment:'pending',parent,attendance:Array(20).fill(0)});closeModal('modal-student');renderStudents();renderParents();updateStats();renderDashboard();showNotif('✅ O\'quvchi qo\'shildi!');['s-name','s-surname','s-phone','s-parent'].forEach(id=>document.getElementById(id).value='');}
+function saveParent(){const pName=document.getElementById('p-name').value.trim(),pPhone=document.getElementById('p-phone').value.trim(),childName=document.getElementById('p-child-name').value.trim(),childSurname=document.getElementById('p-child-surname').value.trim(),group=document.getElementById('p-group').value,fee=parseInt(document.getElementById('p-fee').value)||500000;if(!pName||!childName||!childSurname||!group){showNotif('⚠️ Barcha maydonlarni to\'ldiring!');return;}const newId=Math.max(...STUDENTS.map(s=>s.id))+1;STUDENTS.push({id:newId,name:childName,surname:childSurname,group,phone:pPhone,fee,payment:'pending',parent:pName,attendance:Array(20).fill(0)});closeModal('modal-parent');renderParents();renderStudents();updateStats();renderDashboard();showNotif('✅ Yangi bola ro\'yxatga qo\'shildi!');['p-name','p-phone','p-child-name','p-child-surname'].forEach(id=>document.getElementById(id).value='');}
+function showNotif(msg){const n=document.getElementById('notif');n.textContent=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),2800);}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');}));
+</script>
+</body>
+</html>
